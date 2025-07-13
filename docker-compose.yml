@@ -1,0 +1,12 @@
+services:
+  spring-boot-service:
+    build: ./spring-boot-service
+    container_name: spring-boot-service
+    ports:
+      - "8080:8080"
+    networks:
+      - plant-my-study
+
+networks:
+  plant-my-study:
+    driver: bridge
