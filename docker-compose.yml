@@ -6,6 +6,17 @@ services:
       - "8080:8080"
     networks:
       - plant-my-study
+  
+  postgres:
+    image: postgres:14.18
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - plant-my-study
 
 networks:
   plant-my-study:
