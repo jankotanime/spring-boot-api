@@ -1,7 +1,9 @@
 services:
   spring-boot-service:
-    build: ./spring-boot-service
     container_name: spring-boot-service
+    build: ./spring-boot-service
+    depends_on:
+      - postgres
     expose:
       - "8080"            
     networks:
@@ -20,13 +22,16 @@ services:
       - plant-my-study
   
   postgres:
-    image: postgres:14.18
     container_name: postgres
+    image: postgres:14.18
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    restart: unless-stopped
+    volumes:
+      - ./pg-data:/var/lib/postgresql/data
     networks:
       - plant-my-study
 
