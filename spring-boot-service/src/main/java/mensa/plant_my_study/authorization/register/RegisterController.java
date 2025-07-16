@@ -19,7 +19,6 @@ public class RegisterController {
   private final RegisterService registrationService;
   @PostMapping
   public ResponseEntity<Map<String, String>> getAllUsers(@RequestBody Map<String, String> reqData) {
-
     if (!reqData.containsKey("username") || !reqData.containsKey("password") 
         || !reqData.containsKey("email")) {
       return ResponseEntity.status(403).body(Map.of("err", "Bad request"));
@@ -30,7 +29,7 @@ public class RegisterController {
     String password = reqData.get("password");
 
     Map<String, String> repsonse = registrationService.tryToRegister(username, email, password);
-
+    
     if (repsonse.containsKey("err")) {
       return ResponseEntity.status(403).body(repsonse);
     } else {

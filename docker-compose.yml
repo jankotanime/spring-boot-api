@@ -8,6 +8,8 @@ services:
       - "8080:8080"
     networks:
       - plant-my-study
+    volumes:
+      - ./spring-boot-service:/app
 
   nginx:
     image: nginx:latest
