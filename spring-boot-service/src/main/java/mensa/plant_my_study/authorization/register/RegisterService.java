@@ -2,6 +2,7 @@ package mensa.plant_my_study.authorization.register;
 
 import mensa.plant_my_study.user.User;
 import mensa.plant_my_study.user.UserRepository;
+import mensa.plant_my_study.security.JwtConfig;
 import mensa.plant_my_study.security.PasswordConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class RegisterService {
   private final UserRepository userRepository;
   private final PasswordConfig passwordConfig;
+  private final JwtConfig jwtConfig;
 
   public static boolean patternMatches(String emailAddress, String regexPattern) {
     return Pattern.compile(regexPattern)
@@ -29,14 +31,14 @@ public class RegisterService {
 
   public Map<String, String> tryToRegister(String username, String email, String password) {
     Map<String, String> repsonse = new HashMap<String, String>();
-    Optional<User> isUser = userRepository.findByUsername(username);
-    if (isUser.isPresent()) {
+    Optional<User> userOptional = userRepository.findByUsername(username);
+    if (userOptional.isPresent()) {
       repsonse.put("err", "Username taken");
       return repsonse;
     }
 
-    isUser = userRepository.findByEmail(email);
-    if (isUser.isPresent()) {
+    userOptional = userRepository.findByEmail(email);
+    if (userOptional.isPresent()) {
       repsonse.put("err", "Email taken");
       return repsonse;
     }
@@ -53,7 +55,8 @@ public class RegisterService {
     String hashedPassword = passwordConfig.passwordEncoder().encode(password);
     User user = new User(username, email, hashedPassword);
     userRepository.save(user);
-    repsonse.put("ok", "ok");
+    String token = jwtConfig.createToken(user.getId(), user.getUsername());
+    repsonse.put("token", token);
     return repsonse;
   }
 }
