@@ -7,35 +7,43 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.lang.NonNull;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-    public static final String SECRET_KEY = "Sekret Victorii";
 
-    @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
-        String token = request.getHeader("Authorization");
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-            try {
-                DecodedJWT jwt = JWT.require(com.auth0.jwt.algorithms.Algorithm.HMAC256(SECRET_KEY)).build().verify(token);
-                String id = jwt.getClaim("id").asString();
-                if (id != null) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(id, null, null);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            } catch (JWTVerificationException e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-                return;
-            }
+  private final String secretKey;
+
+  public JwtAuthorizationFilter(String secretKey) {
+    this.secretKey = secretKey;
+  }
+
+  @Override
+  protected void doFilterInternal(HttpServletRequest request,
+    HttpServletResponse response,
+    FilterChain filterChain) throws ServletException, IOException {
+    String token = request.getHeader("Authorization");
+
+    if (token != null && token.startsWith("Bearer ")) {
+      token = token.substring(7);
+      try {
+        DecodedJWT jwt = JWT.require(com.auth0.jwt.algorithms.Algorithm.HMAC256(secretKey)).build().verify(token);
+        String id = jwt.getSubject();      
+        String username = jwt.getClaim("username").asString();
+        if (id != null && username != null) {
+          JwtPrincipal principal = new JwtPrincipal(id, username);
+          UsernamePasswordAuthenticationToken authentication =
+            new UsernamePasswordAuthenticationToken(principal, null, null);
+          SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        filterChain.doFilter(request, response);
+      } catch (JWTVerificationException e) {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+        return;
+      }
     }
+    filterChain.doFilter(request, response);
+  }
 }

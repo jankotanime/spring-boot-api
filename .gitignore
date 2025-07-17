@@ -1,4 +1,5 @@
 pg-data
+.vscode
 .idea
 .env
 test

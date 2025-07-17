@@ -9,4 +9,8 @@ public class PasswordConfig {
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
+
+  public boolean verifyPassword(String rawPassword, String encodedPassword) {
+    return passwordEncoder().matches(rawPassword, encodedPassword);
+  }
 }
