@@ -1,6 +1,7 @@
 package mensa.plant_my_study.authorization.login;
 
-import mensa.plant_my_study.security.JwtConfig;
+import mensa.plant_my_study.accessToken.AccessTokenManager;
+import mensa.plant_my_study.refreshToken.RefreshTokenManager;
 import mensa.plant_my_study.security.PasswordConfig;
 import mensa.plant_my_study.user.User;
 import mensa.plant_my_study.user.UserRepository;
@@ -17,30 +18,34 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class LoginService {
+  private final RefreshTokenManager refreshTokenManager;
+  private final AccessTokenManager accessTokenManager;
   private final UserRepository userRepository;
   private final PasswordConfig passwordConfig;
-  private final JwtConfig jwtConfig;
 
-  public Map<String, String> tryToLogin(String username, String password) {
-    Map<String, String> repsonse = new HashMap<String, String>();
-    Optional<User> userOptional = userRepository.findByUsername(username);
+  public Map<String, String> tryToLogin(String loginData, String password) {
+    Map<String, String> response = new HashMap<String, String>();
+    Optional<User> userOptional = userRepository.findByUsername(loginData);
     
     if (userOptional.isEmpty()) {
-      repsonse.put("err", "Wrong username");
-      return repsonse;
+      userOptional = userRepository.findByEmail(loginData);
+      if (userOptional.isEmpty()) {
+        response.put("err", "Wrong email or username");
+        return response;
+      }
     }
 
     User user = userOptional.get();
 
     if (passwordConfig.verifyPassword(password, user.getPassword())) {
-      String token = jwtConfig.createToken(user.getId(), user.getUsername());
-
-      Map<String, String> response = new HashMap<>();
-      response.put("token", token);
+      String refreshToken = refreshTokenManager.generateRefreshToken(user.getId());
+      String accessToken = accessTokenManager.GenerateToken(user);
+      response.put("refresh-token", refreshToken);
+      response.put("access-token", accessToken);
       return response;
     }
 
-    repsonse.put("err", "Wrong password");
-    return repsonse;
+    response.put("err", "Wrong password");
+    return response;
   }
 }

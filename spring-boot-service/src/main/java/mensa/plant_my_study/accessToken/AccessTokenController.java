@@ -1,4 +1,4 @@
-package mensa.plant_my_study.authorization.login;
+package mensa.plant_my_study.accessToken;
 
 import java.util.Map;
 
@@ -14,26 +14,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Validated
 @RestController
-@RequestMapping("/login")
-public class LoginController {
-  private final LoginService loginService;
+@RequestMapping("/access-token")
+public class AccessTokenController {
+  private final AccessTokenService accessTokenService;
 
   @PostMapping
-  public ResponseEntity<Map<String, String>> tryToLoginController(@RequestBody Map<String, String> reqData) {
-
-    if (!reqData.containsKey("login-data") || !reqData.containsKey("password")) {
+  public ResponseEntity<Map<String, String>> GetTokenController(@RequestBody Map<String, String> reqData) {
+    if (!reqData.containsKey("refresh-token")) {
       return ResponseEntity.status(403).body(Map.of("err", "Bad request"));
     }
 
-    String loginData = reqData.get("login-data");
-    String password = reqData.get("password");
+    String refreshToken = reqData.get("refresh-token");
 
-    Map<String, String> response = loginService.tryToLogin(loginData, password);
+    Map<String, String> response = accessTokenService.GetToken(refreshToken);
 
     if (response.containsKey("err")) {
       return ResponseEntity.status(403).body(response);
-    } else {
-      return ResponseEntity.ok(response); 
     }
+
+    return ResponseEntity.status(200).body(response);
   }
 }

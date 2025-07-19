@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class RegisterController {
   private final RegisterService registrationService;
   @PostMapping
-  public ResponseEntity<Map<String, String>> getAllUsers(@RequestBody Map<String, String> reqData) {
+  public ResponseEntity<Map<String, String>> tryToRegisterController(@RequestBody Map<String, String> reqData) {
     if (!reqData.containsKey("username") || !reqData.containsKey("password") 
         || !reqData.containsKey("email")) {
       return ResponseEntity.status(403).body(Map.of("err", "Bad request"));
@@ -27,6 +27,8 @@ public class RegisterController {
     String username = reqData.get("username");
     String email = reqData.get("email");
     String password = reqData.get("password");
+
+    System.out.println("przed service");
 
     Map<String, String> repsonse = registrationService.tryToRegister(username, email, password);
     

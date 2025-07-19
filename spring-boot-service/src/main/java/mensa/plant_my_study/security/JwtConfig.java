@@ -1,6 +1,7 @@
 package mensa.plant_my_study.security;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,7 @@ public class JwtConfig {
     return secretKey;
   }
 
-  public String createToken(Long id, String username) {
+  public String createToken(UUID id, String username) {
     String token = JWT.create()
       .withSubject(id.toString())
       .withClaim("username", username)
