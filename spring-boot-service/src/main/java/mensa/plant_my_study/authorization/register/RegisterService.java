@@ -57,9 +57,9 @@ public class RegisterService {
     String hashedPassword = passwordConfig.passwordEncoder().encode(password);
     User user = new User(username, email, hashedPassword);
     userRepository.save(user);
-    String refreshToken = refreshTokenManager.generateRefreshToken(user.getId());
+    Map<String, String> newRefreshToken = refreshTokenManager.generateRefreshToken(user.getId());
     String accessToken = accessTokenManager.GenerateToken(user);
-    response.put("refresh-token", refreshToken);
+    response.putAll(newRefreshToken);
     response.put("access-token", accessToken);
     return response;
   }

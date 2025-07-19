@@ -1,6 +1,7 @@
 package mensa.plant_my_study.refreshToken;
 
 import java.util.Map;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,16 +21,15 @@ public class RefreshTokenController {
 
   @PostMapping
   public ResponseEntity<Map<String, String>> TryToRefreshTokenController(@RequestBody Map<String, String> reqData) {
-    System.out.println("Poczatek kontroller");
-    if (!reqData.containsKey("refresh-token")) {
+    if (!reqData.containsKey("refresh-token") || !reqData.containsKey("refresh-token-id")) {
       return ResponseEntity.status(403).body(Map.of("err", "Bad request"));
     }
     
+    UUID tokenId = UUID.fromString(reqData.get("refresh-token-id"));
     String token = reqData.get("refresh-token");
     
-    Map<String, String> response = refreshTokenService.refreshRefreshToken(token);
+    Map<String, String> response = refreshTokenService.refreshRefreshToken(tokenId, token);
     
-    System.out.println(response);
     if (response.containsKey("err")) {
       return ResponseEntity.status(403).body(response);
     }

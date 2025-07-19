@@ -2,13 +2,15 @@ package mensa.plant_my_study.refreshToken;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-
+import mensa.plant_my_study.security.RefreshTokenConfig;
 import mensa.plant_my_study.user.User;
 import mensa.plant_my_study.user.UserRepository;
 
@@ -17,20 +19,26 @@ import mensa.plant_my_study.user.UserRepository;
 public class RefreshTokenManager {
   private final UserRepository userRepository;
   private final RefreshTokenRepository refreshTokenRepository;
+  private final RefreshTokenConfig tokenConfig;
   private static final Duration REFRESH_TOKEN_VALIDITY = Duration.ofMinutes(60);
 
-  public String generateRefreshToken(final UUID userId) {
+  public Map<String, String> generateRefreshToken(final UUID userId) {
+    Map<String, String> result = new HashMap<>();
     final User user = userRepository.findById(userId).orElseThrow();
     final String newToken = UUID.randomUUID().toString();
+    String hashedToken = tokenConfig.tokenEncoder().encode(newToken);
     final Instant createdAt = Instant.now();
     final Instant expiresAt = createdAt.plus(REFRESH_TOKEN_VALIDITY);
-    final RefreshToken refreshToken = new RefreshToken(user, newToken, createdAt, expiresAt);
+    final RefreshToken refreshToken = new RefreshToken(user, hashedToken, createdAt, expiresAt);
     refreshTokenRepository.save(refreshToken);
-    return newToken;
+    result.put("refresh-token-id", refreshToken.getId().toString());
+    result.put("refresh-token", newToken);
+    return result;
   }
 
   public Boolean deleteRefreshToken(final String token) {
-    Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByToken(token);
+    String hashedToken = tokenConfig.tokenEncoder().encode(token);
+    Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByToken(hashedToken);
 
     if (refreshTokenOptional.isEmpty()) {
       return false;
@@ -43,16 +51,18 @@ public class RefreshTokenManager {
     return true;
   }
 
-  public User validateRefreshTokenAndGetUser(final String token) {
+  public User validateRefreshTokenAndGetUser(final UUID tokenId, final String token) {
     Instant now = Instant.now();
-    Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByToken(token);
+    Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findById(tokenId);
 
     if (refreshTokenOptional.isEmpty()) {
       return null;
     }
 
     RefreshToken refreshToken = refreshTokenOptional.get();
-    if (Duration.between(now, refreshToken.getExpiresAt()).isNegative()) {
+
+    if (Duration.between(now, refreshToken.getExpiresAt()).isNegative() ||
+    !tokenConfig.verifyToken(token, refreshToken.getToken())) {
       deleteRefreshToken(refreshToken.getToken());
       return null;
     }
