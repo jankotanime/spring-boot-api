@@ -2,6 +2,7 @@ package mensa.plant_my_study.accessToken;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,10 @@ public class AccessTokenService {
   private final RefreshTokenManager refreshTokenManager;
   private final AccessTokenManager accessTokenLogic;
 
-  public Map<String, String> GetToken(String refreshToken) {
+  public Map<String, String> GetToken(UUID refreshTokenId, String refreshToken) {
     Map<String, String> response = new HashMap<>();
 
-    User validateUser = refreshTokenManager.validateRefreshTokenAndGetUser(refreshToken);
+    User validateUser = refreshTokenManager.validateRefreshTokenAndGetUser(refreshTokenId, refreshToken);
 
     if (validateUser == null) {
       response.put("err", "Expired refresh token");

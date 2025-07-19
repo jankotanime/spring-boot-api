@@ -28,8 +28,6 @@ public class RegisterController {
     String email = reqData.get("email");
     String password = reqData.get("password");
 
-    System.out.println("przed service");
-
     Map<String, String> repsonse = registrationService.tryToRegister(username, email, password);
     
     if (repsonse.containsKey("err")) {

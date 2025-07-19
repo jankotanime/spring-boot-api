@@ -38,9 +38,9 @@ public class LoginService {
     User user = userOptional.get();
 
     if (passwordConfig.verifyPassword(password, user.getPassword())) {
-      String refreshToken = refreshTokenManager.generateRefreshToken(user.getId());
+      Map<String, String> newRefreshToken = refreshTokenManager.generateRefreshToken(user.getId());
       String accessToken = accessTokenManager.GenerateToken(user);
-      response.put("refresh-token", refreshToken);
+      response.putAll(newRefreshToken);
       response.put("access-token", accessToken);
       return response;
     }
