@@ -2,7 +2,8 @@ package mensa.plant_my_study.authorization.register;
 
 import mensa.plant_my_study.user.User;
 import mensa.plant_my_study.user.UserRepository;
-import mensa.plant_my_study.security.JwtConfig;
+import mensa.plant_my_study.accessToken.AccessTokenManager;
+import mensa.plant_my_study.refreshToken.RefreshTokenManager;
 import mensa.plant_my_study.security.PasswordConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,8 @@ import org.springframework.stereotype.Service;
 public class RegisterService {
   private final UserRepository userRepository;
   private final PasswordConfig passwordConfig;
-  private final JwtConfig jwtConfig;
+  private final RefreshTokenManager refreshTokenManager;
+  private final AccessTokenManager accessTokenManager;
 
   public static boolean patternMatches(String emailAddress, String regexPattern) {
     return Pattern.compile(regexPattern)
@@ -30,33 +32,35 @@ public class RegisterService {
   }
 
   public Map<String, String> tryToRegister(String username, String email, String password) {
-    Map<String, String> repsonse = new HashMap<String, String>();
+    Map<String, String> response = new HashMap<String, String>();
     Optional<User> userOptional = userRepository.findByUsername(username);
     if (userOptional.isPresent()) {
-      repsonse.put("err", "Username taken");
-      return repsonse;
+      response.put("err", "Username taken");
+      return response;
     }
 
     userOptional = userRepository.findByEmail(email);
     if (userOptional.isPresent()) {
-      repsonse.put("err", "Email taken");
-      return repsonse;
+      response.put("err", "Email taken");
+      return response;
     }
 
     if (!patternMatches(email, "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+.[a-zA-Z0-9.-]+$")) {
-      repsonse.put("err", "Wrong email");
-      return repsonse;
+      response.put("err", "Wrong email");
+      return response;
     }
     if (!patternMatches(password, "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$")) {
-      repsonse.put("err", "Wrong password");
-      return repsonse;
+      response.put("err", "Wrong password");
+      return response;
     }
 
     String hashedPassword = passwordConfig.passwordEncoder().encode(password);
     User user = new User(username, email, hashedPassword);
     userRepository.save(user);
-    String token = jwtConfig.createToken(user.getId(), user.getUsername());
-    repsonse.put("token", token);
-    return repsonse;
+    String refreshToken = refreshTokenManager.generateRefreshToken(user.getId());
+    String accessToken = accessTokenManager.GenerateToken(user);
+    response.put("refresh-token", refreshToken);
+    response.put("access-token", accessToken);
+    return response;
   }
 }
