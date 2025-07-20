@@ -1,5 +1,8 @@
 package mensa.plant_my_study.security;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,10 +12,19 @@ import org.springframework.beans.factory.annotation.Value;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import jakarta.annotation.PostConstruct;
+
 @Component
 public class JwtConfig {
   @Value("${jwt.secret}")
+  private String secretPath;
+
   private String secretKey;
+
+  @PostConstruct
+  public void init() throws IOException {
+    secretKey = Files.readString(Path.of(secretPath)).trim();
+  }
 
   public String getSecretKey() {
     return secretKey;
