@@ -4,6 +4,13 @@ services:
     build: ./spring-boot-service
     depends_on:
       - postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_URL=${POSTGRES_URL}
+      - JWT_SECRET_FILE=/run/secrets/spring-boot-jwt-secret
+    secrets:
+      - spring-boot-jwt-secret
     ports:
       - "8080:8080"
     networks:
@@ -29,8 +36,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_NAME=${POSTGRES_NAME}
     restart: unless-stopped
     volumes:
       - ./pg-data:/var/lib/postgresql/data
@@ -41,3 +49,7 @@ services:
 networks:
   plant-my-study:
     driver: bridge
+
+secrets:
+  spring-boot-jwt-secret:
+    file: ./secrets/spring-boot-jwt

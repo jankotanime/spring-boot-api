@@ -3,3 +3,4 @@ pg-data
 .idea
 .env
 test
+secrets
