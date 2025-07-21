@@ -25,10 +25,10 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     String secretKey = jwtConfig.getSecretKey();
-    
+
     if (jwtEnabled) {
       http.authorizeHttpRequests(auth -> auth
-        .requestMatchers(HttpMethod.POST, "/login", "/register", 
+        .requestMatchers(HttpMethod.POST, "/login", "/register",
         "/access-token", "/refresh-token").permitAll()
         .anyRequest().authenticated()
       );
@@ -37,6 +37,7 @@ public class SecurityConfig {
     }
     http
       .csrf(AbstractHttpConfigurer::disable)
+      .logout(logout -> logout.disable())
       .formLogin(AbstractHttpConfigurer::disable)
       .httpBasic(AbstractHttpConfigurer::disable)
       .addFilterBefore(new JwtAuthorizationFilter(secretKey), UsernamePasswordAuthenticationFilter.class);

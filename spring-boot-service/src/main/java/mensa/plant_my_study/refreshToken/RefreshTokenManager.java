@@ -3,6 +3,7 @@ package mensa.plant_my_study.refreshToken;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,9 +37,8 @@ public class RefreshTokenManager {
     return result;
   }
 
-  public Boolean deleteRefreshToken(final String token) {
-    String hashedToken = tokenConfig.tokenEncoder().encode(token);
-    Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByToken(hashedToken);
+  public Boolean deleteRefreshToken(final UUID tokenId) {
+    Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findById(tokenId);
 
     if (refreshTokenOptional.isEmpty()) {
       return false;
@@ -49,6 +49,12 @@ public class RefreshTokenManager {
     refreshTokenRepository.delete(refreshToken);
 
     return true;
+  }
+
+  public void deleteSomeRefreshTokens(final List<RefreshToken> tokens) {
+    for (RefreshToken token : tokens) {
+      refreshTokenRepository.delete(token);
+    }
   }
 
   public User validateRefreshTokenAndGetUser(final UUID tokenId, final String token) {
@@ -63,7 +69,7 @@ public class RefreshTokenManager {
 
     if (Duration.between(now, refreshToken.getExpiresAt()).isNegative() ||
     !tokenConfig.verifyToken(token, refreshToken.getToken())) {
-      deleteRefreshToken(refreshToken.getToken());
+      deleteRefreshToken(refreshToken.getId());
       return null;
     }
 

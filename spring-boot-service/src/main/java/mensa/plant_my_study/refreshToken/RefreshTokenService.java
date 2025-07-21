@@ -26,7 +26,7 @@ public class RefreshTokenService {
       return response;
     }
 
-    refreshTokenManager.deleteRefreshToken(token);
+    refreshTokenManager.deleteRefreshToken(tokenId);
     
     Map<String, String> newRefreshToken = refreshTokenManager.generateRefreshToken(validateUser.getId());
     String newAccessToken = accessTokenManager.GenerateToken(validateUser);

@@ -25,8 +25,16 @@ public class RefreshTokenController {
       return ResponseEntity.status(403).body(Map.of("err", "Bad request"));
     }
     
-    UUID tokenId = UUID.fromString(reqData.get("refresh-token-id"));
+    String tokenIdString = reqData.get("refresh-token-id");
     String token = reqData.get("refresh-token");
+
+    UUID tokenId;
+
+    try {
+      tokenId = UUID.fromString(tokenIdString);
+    } catch (IllegalArgumentException | NullPointerException e) {
+      return ResponseEntity.status(403).body(Map.of("err", "Bad refresh token id format"));
+    }
     
     Map<String, String> response = refreshTokenService.refreshRefreshToken(tokenId, token);
     
