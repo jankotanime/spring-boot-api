@@ -1,4 +1,4 @@
-package mensa.plant_my_study.refreshToken;
+package mensa.plant_my_study.security.refreshToken;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -11,7 +11,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import mensa.plant_my_study.security.RefreshTokenConfig;
+import mensa.plant_my_study.security.config.RefreshTokenConfig;
 import mensa.plant_my_study.user.User;
 import mensa.plant_my_study.user.UserRepository;
 
@@ -45,7 +45,7 @@ public class RefreshTokenManager {
     }
 
     RefreshToken refreshToken = refreshTokenOptional.get();
-    
+
     refreshTokenRepository.delete(refreshToken);
 
     return true;

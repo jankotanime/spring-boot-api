@@ -1,4 +1,4 @@
-package mensa.plant_my_study.security;
+package mensa.plant_my_study.security.config;
 
 import java.io.IOException;
 import java.nio.file.Files;

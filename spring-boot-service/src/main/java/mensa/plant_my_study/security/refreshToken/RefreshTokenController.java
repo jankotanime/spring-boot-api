@@ -1,4 +1,4 @@
-package mensa.plant_my_study.refreshToken;
+package mensa.plant_my_study.security.refreshToken;
 
 import java.util.Map;
 import java.util.UUID;
@@ -22,9 +22,9 @@ public class RefreshTokenController {
   @PostMapping
   public ResponseEntity<Map<String, String>> TryToRefreshTokenController(@RequestBody Map<String, String> reqData) {
     if (!reqData.containsKey("refresh-token") || !reqData.containsKey("refresh-token-id")) {
-      return ResponseEntity.status(403).body(Map.of("err", "Bad request"));
+      return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
     }
-    
+
     String tokenIdString = reqData.get("refresh-token-id");
     String token = reqData.get("refresh-token");
 
@@ -33,15 +33,15 @@ public class RefreshTokenController {
     try {
       tokenId = UUID.fromString(tokenIdString);
     } catch (IllegalArgumentException | NullPointerException e) {
-      return ResponseEntity.status(403).body(Map.of("err", "Bad refresh token id format"));
-    }
-    
-    Map<String, String> response = refreshTokenService.refreshRefreshToken(tokenId, token);
-    
-    if (response.containsKey("err")) {
-      return ResponseEntity.status(403).body(response);
+      return ResponseEntity.status(422).body(Map.of("err", "Bad refresh token id format"));
     }
 
-    return ResponseEntity.status(200).body(response);
+    Map<String, String> response = refreshTokenService.refreshRefreshToken(tokenId, token);
+
+    if (response.containsKey("err")) {
+      return ResponseEntity.status(401).body(response);
+    }
+
+    return ResponseEntity.ok(response);
   }
 }

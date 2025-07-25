@@ -1,4 +1,4 @@
-package mensa.plant_my_study.accessToken;
+package mensa.plant_my_study.security.accessToken;
 
 import java.util.Map;
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class AccessTokenController {
   @PostMapping
   public ResponseEntity<Map<String, String>> GetTokenController(@RequestBody Map<String, String> reqData) {
     if (!reqData.containsKey("refresh-token") || !reqData.containsKey("refresh-token-id")) {
-      return ResponseEntity.status(403).body(Map.of("err", "Bad request"));
+      return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
     }
 
     String refreshToken = reqData.get("refresh-token");
@@ -31,9 +31,9 @@ public class AccessTokenController {
     Map<String, String> response = accessTokenService.GetToken(refreshTokenId, refreshToken);
 
     if (response.containsKey("err")) {
-      return ResponseEntity.status(403).body(response);
+      return ResponseEntity.status(401).body(response);
     }
 
-    return ResponseEntity.status(200).body(response);
+    return ResponseEntity.ok(response);
   }
 }

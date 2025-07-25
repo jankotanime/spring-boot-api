@@ -1,4 +1,4 @@
-package mensa.plant_my_study.security;
+package mensa.plant_my_study.security.jwtAuthorization;
 
 import lombok.Getter;
 

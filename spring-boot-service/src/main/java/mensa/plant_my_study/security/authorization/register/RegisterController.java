@@ -1,4 +1,4 @@
-package mensa.plant_my_study.authorization.register;
+package mensa.plant_my_study.security.authorization.register;
 
 import java.util.Map;
 
@@ -19,9 +19,9 @@ public class RegisterController {
   private final RegisterService registrationService;
   @PostMapping
   public ResponseEntity<Map<String, String>> tryToRegisterController(@RequestBody Map<String, String> reqData) {
-    if (!reqData.containsKey("username") || !reqData.containsKey("password") 
+    if (!reqData.containsKey("username") || !reqData.containsKey("password")
         || !reqData.containsKey("email")) {
-      return ResponseEntity.status(403).body(Map.of("err", "Bad request"));
+      return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
     }
 
     String username = reqData.get("username");
@@ -29,11 +29,11 @@ public class RegisterController {
     String password = reqData.get("password");
 
     Map<String, String> repsonse = registrationService.tryToRegister(username, email, password);
-    
+
     if (repsonse.containsKey("err")) {
-      return ResponseEntity.status(403).body(repsonse);
+      return ResponseEntity.status(401).body(repsonse);
     } else {
-      return ResponseEntity.ok(repsonse); 
+      return ResponseEntity.ok(repsonse);
     }
   }
 }

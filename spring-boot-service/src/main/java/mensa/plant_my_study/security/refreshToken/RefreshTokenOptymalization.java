@@ -1,4 +1,4 @@
-package mensa.plant_my_study.refreshToken;
+package mensa.plant_my_study.security.refreshToken;
 
 import org.springframework.stereotype.Component;
 
@@ -19,8 +19,8 @@ public class RefreshTokenOptymalization {
 
   @Scheduled(cron="0 5 22 * * *", zone="Europe/Warsaw")
   public void scheduleFixedRateTask() {
-    System.out.println("Clearing refresh tokens database");   
-    
+    System.out.println("Clearing refresh tokens database");
+
     Instant now = Instant.now();
 
     List<RefreshToken> tokens = refreshTokenRepository.findAll();
