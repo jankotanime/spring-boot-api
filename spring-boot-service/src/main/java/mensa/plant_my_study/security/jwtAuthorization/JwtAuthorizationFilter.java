@@ -1,8 +1,10 @@
-package mensa.plant_my_study.security;
+package mensa.plant_my_study.security.jwtAuthorization;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.Map;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
@@ -31,7 +34,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       accessToken = accessToken.substring(7);
       try {
         DecodedJWT jwt = JWT.require(com.auth0.jwt.algorithms.Algorithm.HMAC256(secretKey)).build().verify(accessToken);
-        String id = jwt.getSubject();      
+        String id = jwt.getSubject();
         String username = jwt.getClaim("username").asString();
         if (id != null && username != null) {
           JwtPrincipal principal = new JwtPrincipal(id, username);
@@ -40,7 +43,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }
       } catch (JWTVerificationException e) {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+        response.setStatus(401);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        Map<String, Object> errorBody = Map.of("err", e.getMessage());
+        new ObjectMapper().writeValue(response.getWriter(), errorBody);
+        response.getWriter();
         return;
       }
     }

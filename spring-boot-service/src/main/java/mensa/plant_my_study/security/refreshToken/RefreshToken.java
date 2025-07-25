@@ -1,4 +1,4 @@
-package mensa.plant_my_study.refreshToken;
+package mensa.plant_my_study.security.refreshToken;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -37,7 +37,7 @@ public class RefreshToken {
   private Instant createdAt;
 
   @Column(nullable = false)
-  private Instant expiresAt;  
+  private Instant expiresAt;
 
   public RefreshToken(User user, String token, Instant createdAt, Instant expiresAt) {
     this.user = user;

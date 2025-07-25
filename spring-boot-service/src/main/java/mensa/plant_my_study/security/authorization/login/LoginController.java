@@ -1,4 +1,4 @@
-package mensa.plant_my_study.authorization.login;
+package mensa.plant_my_study.security.authorization.login;
 
 import java.util.Map;
 
@@ -22,7 +22,7 @@ public class LoginController {
   public ResponseEntity<Map<String, String>> tryToLoginController(@RequestBody Map<String, String> reqData) {
 
     if (!reqData.containsKey("login-data") || !reqData.containsKey("password")) {
-      return ResponseEntity.status(403).body(Map.of("err", "Bad request"));
+      return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
     }
 
     String loginData = reqData.get("login-data");
@@ -31,9 +31,9 @@ public class LoginController {
     Map<String, String> response = loginService.tryToLogin(loginData, password);
 
     if (response.containsKey("err")) {
-      return ResponseEntity.status(403).body(response);
+      return ResponseEntity.status(401).body(response);
     } else {
-      return ResponseEntity.ok(response); 
+      return ResponseEntity.ok(response);
     }
   }
 }

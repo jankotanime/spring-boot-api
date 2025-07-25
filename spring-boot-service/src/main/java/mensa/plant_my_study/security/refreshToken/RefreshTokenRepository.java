@@ -1,4 +1,4 @@
-package mensa.plant_my_study.refreshToken;
+package mensa.plant_my_study.security.refreshToken;
 
 import java.util.List;
 import java.util.Optional;

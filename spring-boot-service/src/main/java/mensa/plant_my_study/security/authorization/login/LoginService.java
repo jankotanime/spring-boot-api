@@ -1,8 +1,8 @@
-package mensa.plant_my_study.authorization.login;
+package mensa.plant_my_study.security.authorization.login;
 
-import mensa.plant_my_study.accessToken.AccessTokenManager;
-import mensa.plant_my_study.refreshToken.RefreshTokenManager;
-import mensa.plant_my_study.security.PasswordConfig;
+import mensa.plant_my_study.security.accessToken.AccessTokenManager;
+import mensa.plant_my_study.security.config.PasswordConfig;
+import mensa.plant_my_study.security.refreshToken.RefreshTokenManager;
 import mensa.plant_my_study.user.User;
 import mensa.plant_my_study.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class LoginService {
   public Map<String, String> tryToLogin(String loginData, String password) {
     Map<String, String> response = new HashMap<String, String>();
     Optional<User> userOptional = userRepository.findByUsername(loginData);
-    
+
     if (userOptional.isEmpty()) {
       userOptional = userRepository.findByEmail(loginData);
       if (userOptional.isEmpty()) {
