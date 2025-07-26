@@ -27,15 +27,19 @@ public class User {
   @Column(nullable = false)
   private String email;
 
-  @Column(nullable = false)
+  @Column(name = "google_id", nullable = true)
+  private String googleId;
+
+  @Column(nullable = true)
   private String password;
 
   @Column(name = "created_at")
   private Instant createdAt;
 
-  public User(String username, String email, String password) {
+  public User(String username, String email, String password, String googleId) {
     this.username = username;
     this.email = email;
     this.password = password;
+    this.googleId = googleId;
   }
 }
