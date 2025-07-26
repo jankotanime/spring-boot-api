@@ -55,7 +55,7 @@ public class RegisterService {
     }
 
     String hashedPassword = passwordConfig.passwordEncoder().encode(password);
-    User user = new User(username, email, hashedPassword);
+    User user = new User(username, email, hashedPassword, null);
     userRepository.save(user);
     Map<String, String> newRefreshToken = refreshTokenManager.generateRefreshToken(user.getId());
     String accessToken = accessTokenManager.GenerateToken(user);

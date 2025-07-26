@@ -37,6 +37,11 @@ public class LoginService {
 
     User user = userOptional.get();
 
+    if (user.getPassword() == null) {
+      response.put("err", "Password not set");
+      return response;
+    }
+
     if (passwordConfig.verifyPassword(password, user.getPassword())) {
       Map<String, String> newRefreshToken = refreshTokenManager.generateRefreshToken(user.getId());
       String accessToken = accessTokenManager.GenerateToken(user);

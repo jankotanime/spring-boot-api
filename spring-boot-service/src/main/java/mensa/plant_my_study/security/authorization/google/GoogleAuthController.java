@@ -1,4 +1,4 @@
-package mensa.plant_my_study.security.authorization.login;
+package mensa.plant_my_study.security.authorization.google;
 
 import java.util.Map;
 
@@ -14,26 +14,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Validated
 @RestController
-@RequestMapping("/login")
-public class LoginController {
-  private final LoginService loginService;
+@RequestMapping("/google/auth")
+public class GoogleAuthController {
+  private final GoogleAuthService googleAuthService;
 
   @PostMapping
-  public ResponseEntity<Map<String, String>> tryToLoginController(@RequestBody Map<String, String> reqData) {
+  public ResponseEntity<Map<String, String>> tryToLoginWithGoogleController(@RequestBody Map<String, String> reqData) {
 
-    if (!reqData.containsKey("login-data") || !reqData.containsKey("password")) {
+    if (!reqData.containsKey("id-token")) {
       return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
     }
 
-    String loginData = reqData.get("login-data");
-    String password = reqData.get("password");
+    String idToken = reqData.get("id-token");
 
-    Map<String, String> response = loginService.tryToLogin(loginData, password);
+    Map<String, String> response = googleAuthService.tryToLoginWithGoogle(idToken);
 
     if (response.containsKey("err")) {
-      if (response.get("err") == "Password not set") {
-        return ResponseEntity.status(409).body(response);
-      }
       return ResponseEntity.status(401).body(response);
     } else {
       return ResponseEntity.ok(response);
