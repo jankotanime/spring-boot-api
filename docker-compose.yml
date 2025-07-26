@@ -17,31 +17,33 @@ services:
       - plant-my-study
     volumes:
       - ./spring-boot-service:/app
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:8080/test"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
-    # ! jasiu dodaj jakis healthcheck zeby mozna bylo pingowac co jakis czas bo to sie przyda nam pls
-    # ! a test nie dziala bo potrzebuje to chyba tego tokenu co nie
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+      # ? if the application shuts down during startup because it is marked as unhealthy,
+      # ? increase the start_period in the Docker healthcheck. This gives the container
+      # ? more time to start up before health checks begin.
 
   nginx:
     image: nginx:latest
     container_name: nginx-proxy
     ports:
-      - "80:80"            
+      - "80:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - spring-boot-service
     # depends_on:
-    #   spring-boot-service:
-    #     condition: service_healthy
+    #   - spring-boot-service
+    depends_on:
+      spring-boot-service:
+        condition: service_healthy
     # ! to zmienic jak bedzie dobry healthcheck
     networks:
       - plant-my-study
     restart: on-failure
-  
+
   postgres:
     container_name: postgres
     image: postgres:14.18

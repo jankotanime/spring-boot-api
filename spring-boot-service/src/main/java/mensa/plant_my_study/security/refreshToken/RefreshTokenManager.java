@@ -21,7 +21,7 @@ public class RefreshTokenManager {
   private final UserRepository userRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final RefreshTokenConfig tokenConfig;
-  private static final Duration REFRESH_TOKEN_VALIDITY = Duration.ofMinutes(60);
+  private static final Duration REFRESH_TOKEN_VALIDITY = Duration.ofDays(60);
 
   public Map<String, String> generateRefreshToken(final UUID userId) {
     Map<String, String> result = new HashMap<>();

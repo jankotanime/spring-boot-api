@@ -34,7 +34,7 @@ public class JwtConfig {
     String token = JWT.create()
       .withSubject(id.toString())
       .withClaim("username", username)
-      .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
+      .withExpiresAt(new Date(System.currentTimeMillis() + (5 * 60 * 1000)))
       .sign(Algorithm.HMAC256(secretKey));
     return token;
   }
