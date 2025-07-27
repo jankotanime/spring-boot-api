@@ -27,23 +27,31 @@ public class GoogleAuthService {
   private final UserRepository userRepository;
   private final RefreshTokenManager refreshTokenManager;
   private final AccessTokenManager accessTokenManager;
-  private final GoogleIdTokenVerifier verifier;
+  private final GoogleIdTokenVerifier verifierAndroid;
+  private final GoogleIdTokenVerifier verifierIOS;
 
   public GoogleAuthService(UserRepository userRepository, RefreshTokenManager refreshTokenManager,
-    AccessTokenManager accessTokenManager, @Value("${google.id}") String googleId) {
+    AccessTokenManager accessTokenManager, @Value("${google.id.android}") String googleIdAndroid,
+    @Value("${google.id.ios}") String googleIdIOS) {
     this.userRepository = userRepository;
     this.refreshTokenManager = refreshTokenManager;
     this.accessTokenManager = accessTokenManager;
-    this.verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
-      new GsonFactory()).setAudience(Collections.singletonList(googleId)).build();
+    this.verifierAndroid = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
+      new GsonFactory()).setAudience(Collections.singletonList(googleIdAndroid)).build();
+    this.verifierIOS = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
+      new GsonFactory()).setAudience(Collections.singletonList(googleIdIOS)).build();
   }
 
-  public Map<String, String> tryToLoginWithGoogle(String idTokenString) {
+  public Map<String, String> tryToLoginWithGoogle(String idTokenString, String os) {
     Map<String, String> response = new HashMap<>();
     GoogleIdToken idToken;
 
     try {
-      idToken = verifier.verify(idTokenString);
+      if (os.equals("IOS")) {
+        idToken = verifierIOS.verify(idTokenString);
+      } else {
+        idToken = verifierAndroid.verify(idTokenString);
+      }
     } catch (GeneralSecurityException | IOException e) {
       response.put("err", "Verify error");
       return response;
@@ -64,10 +72,12 @@ public class GoogleAuthService {
     if (userOptional.isEmpty()) {
       User user = new User(username, email, null, googleId);
       userRepository.save(user);
+
       Map<String, String> newRefreshToken = refreshTokenManager.generateRefreshToken(user.getId());
       String accessToken = accessTokenManager.GenerateToken(user);
       response.putAll(newRefreshToken);
       response.put("access-token", accessToken);
+      return response;
     }
 
     User user = userOptional.get();

@@ -21,13 +21,18 @@ public class GoogleAuthController {
   @PostMapping
   public ResponseEntity<Map<String, String>> tryToLoginWithGoogleController(@RequestBody Map<String, String> reqData) {
 
-    if (!reqData.containsKey("id-token")) {
+    if (!reqData.containsKey("id-token") || !reqData.containsKey("os")) {
       return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
     }
 
     String idToken = reqData.get("id-token");
+    String os = reqData.get("os");
 
-    Map<String, String> response = googleAuthService.tryToLoginWithGoogle(idToken);
+    if (!os.equals("IOS") && !os.equals("Android")) {
+      return ResponseEntity.status(400).body(Map.of("err", "Wrong OS"));
+    }
+
+    Map<String, String> response = googleAuthService.tryToLoginWithGoogle(idToken, os);
 
     if (response.containsKey("err")) {
       return ResponseEntity.status(401).body(response);

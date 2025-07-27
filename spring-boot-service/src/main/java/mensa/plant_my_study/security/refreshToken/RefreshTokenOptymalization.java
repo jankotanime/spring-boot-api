@@ -17,7 +17,7 @@ public class RefreshTokenOptymalization {
   private final RefreshTokenRepository refreshTokenRepository;
   private final RefreshTokenManager refreshTokenManager;
 
-  @Scheduled(cron="0 5 22 * * *", zone="Europe/Warsaw")
+  @Scheduled(cron="0 0 0 * * *", zone="Europe/Warsaw")
   public void scheduleFixedRateTask() {
     System.out.println("Clearing refresh tokens database");
 
