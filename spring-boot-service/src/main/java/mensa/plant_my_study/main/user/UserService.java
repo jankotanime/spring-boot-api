@@ -1,4 +1,4 @@
-package mensa.plant_my_study.user;
+package mensa.plant_my_study.main.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package mensa.plant_my_study.user;
+package mensa.plant_my_study.main.user;
 
 import java.time.Instant;
 import java.util.UUID;

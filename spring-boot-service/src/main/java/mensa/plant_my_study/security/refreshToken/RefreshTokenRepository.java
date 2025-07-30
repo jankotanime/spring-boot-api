@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import mensa.plant_my_study.user.User;
+import mensa.plant_my_study.main.user.User;
 
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID> {

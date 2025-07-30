@@ -1,9 +1,9 @@
 package mensa.plant_my_study.security.authorization.logout;
 
+import mensa.plant_my_study.main.user.User;
 import mensa.plant_my_study.security.refreshToken.RefreshToken;
 import mensa.plant_my_study.security.refreshToken.RefreshTokenManager;
 import mensa.plant_my_study.security.refreshToken.RefreshTokenRepository;
-import mensa.plant_my_study.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

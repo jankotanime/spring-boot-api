@@ -11,9 +11,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import mensa.plant_my_study.main.user.User;
+import mensa.plant_my_study.main.user.UserRepository;
 import mensa.plant_my_study.security.config.RefreshTokenConfig;
-import mensa.plant_my_study.user.User;
-import mensa.plant_my_study.user.UserRepository;
 
 @RequiredArgsConstructor
 @Component

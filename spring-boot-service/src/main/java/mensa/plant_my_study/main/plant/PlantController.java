@@ -1,4 +1,4 @@
-package mensa.plant_my_study.user;
+package mensa.plant_my_study.main.plant;
 
 import java.util.List;
 
@@ -13,12 +13,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Validated
 @RestController
-@RequestMapping("/user")
-public class UserController {
-  private final UserService userService;
+@RequestMapping("/plant")
+public class PlantController {
+  private final PlantService plantService;
 
   @GetMapping("/")
-  public ResponseEntity<List<User>> getAllUsers(){
-    return ResponseEntity.ok(userService.getAllUsers());
+  public ResponseEntity<List<Plant>> getAllUsers(){
+    return ResponseEntity.ok(plantService.getAllPlants());
   }
 }

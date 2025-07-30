@@ -14,7 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
-import mensa.plant_my_study.user.User;
+import mensa.plant_my_study.main.user.User;
 
 @Data
 @NoArgsConstructor

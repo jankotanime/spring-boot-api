@@ -1,10 +1,10 @@
 package mensa.plant_my_study.security.authorization.login;
 
+import mensa.plant_my_study.main.user.User;
+import mensa.plant_my_study.main.user.UserRepository;
 import mensa.plant_my_study.security.accessToken.AccessTokenManager;
 import mensa.plant_my_study.security.config.PasswordConfig;
 import mensa.plant_my_study.security.refreshToken.RefreshTokenManager;
-import mensa.plant_my_study.user.User;
-import mensa.plant_my_study.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

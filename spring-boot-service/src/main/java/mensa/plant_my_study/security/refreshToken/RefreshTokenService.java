@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import mensa.plant_my_study.main.user.User;
 import mensa.plant_my_study.security.accessToken.AccessTokenManager;
-import mensa.plant_my_study.user.User;
 
 @Service
 @RequiredArgsConstructor

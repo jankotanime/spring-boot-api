@@ -21,6 +21,21 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: plants; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.plants (
+    id uuid NOT NULL,
+    name character varying(255) NOT NULL,
+    cost integer NOT NULL,
+    max_level integer NOT NULL,
+    minutes_to_level_up integer NOT NULL
+);
+
+
+ALTER TABLE public.plants OWNER TO postgres;
+
+--
 -- Name: refresh_tokens; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -52,6 +67,16 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO postgres;
 
 --
+-- Data for Name: plants; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.plants (id, name, cost, max_level, minutes_to_level_up) FROM stdin;
+f10bb90e-f30a-4693-89e4-6c7bcf5e0e1c	Orchid	15	8	80
+767402b0-a096-421d-9d5f-b72ee5054077	Parsies	5	5	30
+\.
+
+
+--
 -- Data for Name: refresh_tokens; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -64,7 +89,16 @@ COPY public.refresh_tokens (id, created_at, expires_at, token, user_id) FROM std
 --
 
 COPY public.users (id, created_at, email, password, username, google_id) FROM stdin;
+9f25470a-3b61-4f50-9983-03d0f08372c5	\N	misio@m.m	$2a$10$CYyAZpstTLEyu7OqFIqbjOhRChzjM81Vi/jjnU5sk54FNVy8Y.Mui	misio	\N
 \.
+
+
+--
+-- Name: plants plants_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.plants
+    ADD CONSTRAINT plants_pkey PRIMARY KEY (id);
 
 
 --
