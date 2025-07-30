@@ -30,6 +30,9 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'com.google.api-client:google-api-client:1.34.1'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'com.google.auth:google-auth-library-oauth2-http:1.18.0'
+	implementation 'com.sun.mail:jakarta.mail:2.0.1'
 }
 
 tasks.named('test') {

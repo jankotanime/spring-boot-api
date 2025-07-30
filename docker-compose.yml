@@ -10,8 +10,9 @@ services:
       - POSTGRES_URL=${POSTGRES_URL}
       - GOOGLE_ID_IOS=${GOOGLE_ID_IOS}
       - GOOGLE_ID_ANDROID=${GOOGLE_ID_ANDROID}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_ID_WEB=${GOOGLE_CLIENT_ID}
+      - GOOGLE_SECRET_WEB=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REFRESH_WEB=${GOOGLE_CLIENT_REFRESH}
       - JWT_SECRET_FILE=/run/secrets/spring-boot-jwt-secret
     secrets:
       - spring-boot-jwt-secret
