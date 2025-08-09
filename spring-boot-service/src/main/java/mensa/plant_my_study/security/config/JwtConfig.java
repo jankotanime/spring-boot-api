@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -37,5 +39,11 @@ public class JwtConfig {
       .withExpiresAt(new Date(System.currentTimeMillis() + (5 * 60 * 1000)))
       .sign(Algorithm.HMAC256(secretKey));
     return token;
+  }
+
+  public String getUserFromJWT() {
+    String username = ((UserDetails) SecurityContextHolder.getContext()
+      .getAuthentication().getPrincipal()).getUsername();
+    return username;
   }
 }
