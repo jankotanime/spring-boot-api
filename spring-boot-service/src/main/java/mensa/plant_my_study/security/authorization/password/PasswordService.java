@@ -1,42 +1,43 @@
 package mensa.plant_my_study.security.authorization.password;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mensa.plant_my_study.main.user.User;
 import mensa.plant_my_study.main.user.UserRepository;
+import mensa.plant_my_study.security.config.PasswordConfig;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PasswordService {
-  private final ResourceBundleMessageSource messageSource;
-  private final GmailEmailService emailService;
   private final UserRepository userRepository;
+  private final PasswordConfig passwordConfig;
 
-  public Map<String, String> SendMailResetPassword(final String email, final String language) {
-    messageSource.setBasename("lang/messages");
-    messageSource.setDefaultEncoding("UTF-8");
-    Locale locale = Locale.forLanguageTag(language);
+  public static boolean patternMatches(String emailAddress, String regexPattern) {
+    return Pattern.compile(regexPattern)
+      .matcher(emailAddress)
+      .matches();
+  }
+
+  public Map<String, String> SetPassword(final User user, final String password) {
     Map<String, String> response = new HashMap<>();
-    try {
-      if (userRepository.findByEmail(email).isEmpty()) {
-        response.put("err", "No user with this email");
-        return response;
-      }
-      String title = messageSource.getMessage("title", null, locale);
-      String mess = messageSource.getMessage("mess", null, locale);
-      emailService.sendEmail(email, title, mess);
-      response.put("data", "Email sent");
-    } catch (Exception e) {
-      e.printStackTrace();
-      response.put("err", e.toString());
+
+    if (!patternMatches(password, "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$")) {
+      response.put("err", "Wrong password");
+      return response;
     }
+
+    String hashedPassword = passwordConfig.passwordEncoder().encode(password);
+    user.setPassword(hashedPassword);
+    userRepository.save(user);
+
+    response.put("data", "Password set");
     return response;
   }
 }

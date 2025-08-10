@@ -35,7 +35,7 @@ public class SecurityConfig {
     if (jwtEnabled) {
       http.authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.POST, "/login", "/register", "/google/auth",
-        "/access-token", "/refresh-token", "/password/reset", "/test").permitAll()
+        "/access-token", "/refresh-token", "/email/password/reset", "/test").permitAll()
         .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
         .anyRequest().authenticated());
     } else {

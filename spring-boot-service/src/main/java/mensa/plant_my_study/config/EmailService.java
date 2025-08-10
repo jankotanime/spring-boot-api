@@ -1,4 +1,4 @@
-package mensa.plant_my_study.security.authorization.password;
+package mensa.plant_my_study.config;
 
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
@@ -13,11 +13,11 @@ import java.util.Base64;
 import java.util.Properties;
 
 @Service
-public class GmailEmailService {
+public class EmailService {
 
   private final GoogleOAuth2TokenService tokenService;
 
-  public GmailEmailService(GoogleOAuth2TokenService tokenService) {
+  public EmailService(GoogleOAuth2TokenService tokenService) {
     this.tokenService = tokenService;
   }
 
