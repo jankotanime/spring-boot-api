@@ -32,6 +32,18 @@ services:
       # ? increase the start_period in the Docker healthcheck. This gives the container
       # ? more time to start up before health checks begin.
 
+  website:
+    container_name: website
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - spring-boot-service
+    networks:
+      - plant-my-study
+
   nginx:
     image: nginx:latest
     container_name: nginx-proxy
