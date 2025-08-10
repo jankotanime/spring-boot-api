@@ -1,4 +1,4 @@
-package mensa.plant_my_study.security.authorization.password;
+package mensa.plant_my_study.security.password;
 
 import java.util.HashMap;
 import java.util.Map;

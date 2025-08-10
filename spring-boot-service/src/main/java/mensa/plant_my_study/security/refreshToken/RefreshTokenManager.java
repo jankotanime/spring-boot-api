@@ -67,9 +67,12 @@ public class RefreshTokenManager {
 
     RefreshToken refreshToken = refreshTokenOptional.get();
 
-    if (Duration.between(now, refreshToken.getExpiresAt()).isNegative() ||
-    !tokenConfig.verifyToken(token, refreshToken.getToken())) {
+    if (Duration.between(now, refreshToken.getExpiresAt()).isNegative()) {
       deleteRefreshToken(refreshToken.getId());
+      return null;
+    }
+
+    if (!tokenConfig.verifyToken(token, refreshToken.getToken())) {
       return null;
     }
 

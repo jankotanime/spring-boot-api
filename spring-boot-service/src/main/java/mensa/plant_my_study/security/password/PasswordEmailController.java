@@ -1,4 +1,4 @@
-package mensa.plant_my_study.security.authorization.password;
+package mensa.plant_my_study.security.password;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/email/password")
+@RequestMapping("/send-mail/password")
 public class PasswordEmailController {
   private final PasswordEmailService passwordService;
 
@@ -44,7 +44,7 @@ public class PasswordEmailController {
       return ResponseEntity.status(404).body(response);
     }
 
-    Map<String, String> response = passwordService.SendMailResetPassword(email, language);
+    Map<String, String> response = passwordService.SendMailSetPassword(email, language);
 
     if (response.containsKey("err")) {
       return ResponseEntity.status(400).body(response);

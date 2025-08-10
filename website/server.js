@@ -17,6 +17,15 @@ app.get('/', async (req, res) => {
   res.render('index.ejs');
 });
 
+app.get('/set-password', async (req, res) => {
+  const apiUrl = process.env.API_URL;
+  res.render('password/setPassword.ejs', { apiUrl });
+});
+
+app.get('/set-password-success', async (req, res) => {
+  res.render('password/setPasswordSuccess.ejs');
+});
+
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
 });

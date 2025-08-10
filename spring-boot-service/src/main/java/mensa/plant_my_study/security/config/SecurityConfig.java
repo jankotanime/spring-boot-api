@@ -34,14 +34,23 @@ public class SecurityConfig {
 
     if (jwtEnabled) {
       http.authorizeHttpRequests(auth -> auth
+        .requestMatchers(HttpMethod.OPTIONS, "/password/set/mail").permitAll()
         .requestMatchers(HttpMethod.POST, "/login", "/register", "/google/auth",
-        "/access-token", "/refresh-token", "/email/password/reset", "/test").permitAll()
+        "/access-token", "/refresh-token", "/send-mail/password/reset", "/send-mail/password/set",
+        "/password/set/mail", "/test").permitAll()
         .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
         .anyRequest().authenticated());
     } else {
       http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
     }
-    http
+    http.cors(cors -> cors.configurationSource(request -> {
+      var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+      corsConfig.addAllowedOrigin("http://localhost:3000");
+      corsConfig.addAllowedMethod("POST");
+      corsConfig.addAllowedHeader("*");
+      corsConfig.setAllowCredentials(true);
+      return corsConfig;
+    }))
       .exceptionHandling(eh -> eh
         .authenticationEntryPoint((request, response, authException) -> {
           response.setStatus(401);
