@@ -27,6 +27,10 @@ public class PasswordController {
 
   @PostMapping("/set/mobile-app")
   public ResponseEntity<Map<String, String>> SetPasswordApp(@RequestBody Map<String, String> reqData) {
+    if (!reqData.containsKey("password")) {
+      return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
+    }
+
     String password = reqData.get("password");
 
     Optional<User> userOptional = userRepository.findByUsername(jwtConfig.getUsernameFromJWT());
@@ -47,6 +51,11 @@ public class PasswordController {
 
   @PostMapping("/set/mail")
   public ResponseEntity<Map<String, String>> SetPasswordMail(@RequestBody Map<String, String> reqData) {
+    if (!reqData.containsKey("password") || !reqData.containsKey("token-id")
+      || !reqData.containsKey("token")) {
+      return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
+    }
+
     String password = reqData.get("password");
     String tokenIdString = reqData.get("token-id");
     String token = reqData.get("token");
@@ -56,7 +65,7 @@ public class PasswordController {
     try {
       tokenId = UUID.fromString(tokenIdString);
     } catch (IllegalArgumentException | NullPointerException e) {
-      return ResponseEntity.status(422).body(Map.of("err", "Bad refresh token id format"));
+      return ResponseEntity.status(422).body(Map.of("err", "Bad reset token id format"));
     }
 
     User user = resetTokenManager.validateResetTokenAndGetUser(tokenId, token);

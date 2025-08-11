@@ -22,7 +22,7 @@ public class ResetTokenManager {
   private final UserRepository userRepository;
   private final ResetTokenRepository resetTokenRepository;
   private final ResetTokenConfig tokenConfig;
-  private static final Duration RESET_TOKEN_VALIDITY = Duration.ofMinutes(15);
+  private static final Duration RESET_TOKEN_VALIDITY = Duration.ofMinutes(20);
 
 public String generateLongResetToken() {
     SecureRandom secureRandom = new SecureRandom();

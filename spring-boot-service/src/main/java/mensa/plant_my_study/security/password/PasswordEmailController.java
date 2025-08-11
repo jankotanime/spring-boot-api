@@ -16,6 +16,10 @@ public class PasswordEmailController {
 
   @PostMapping("/reset")
   public ResponseEntity<Map<String, String>> SendMailResetPassword(@RequestBody Map<String, String> reqData) {
+    if (!reqData.containsKey("email") || !reqData.containsKey("lang")) {
+      return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
+    }
+
     String email = reqData.get("email");
     String language = reqData.get("lang");
 
@@ -35,6 +39,10 @@ public class PasswordEmailController {
 
   @PostMapping("/set")
   public ResponseEntity<Map<String, String>> SendMailSetPassword(@RequestBody Map<String, String> reqData) {
+    if (!reqData.containsKey("email") || !reqData.containsKey("lang")) {
+      return ResponseEntity.status(400).body(Map.of("err", "Bad request"));
+    }
+
     String email = reqData.get("email");
     String language = reqData.get("lang");
 

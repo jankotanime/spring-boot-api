@@ -22,8 +22,17 @@ app.get('/set-password', async (req, res) => {
   res.render('password/setPassword.ejs', { apiUrl });
 });
 
+app.get('/reset-password', async (req, res) => {
+  const apiUrl = process.env.API_URL;
+  res.render('password/resetPassword.ejs', { apiUrl });
+});
+
 app.get('/set-password-success', async (req, res) => {
   res.render('password/setPasswordSuccess.ejs');
+});
+
+app.get('/reset-password-success', async (req, res) => {
+  res.render('password/resetPasswordSuccess.ejs');
 });
 
 app.listen(port, () => {
