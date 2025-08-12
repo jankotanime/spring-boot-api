@@ -41,5 +41,6 @@ public class User {
     this.email = email;
     this.password = password;
     this.googleId = googleId;
+    this.createdAt = Instant.now();
   }
 }
