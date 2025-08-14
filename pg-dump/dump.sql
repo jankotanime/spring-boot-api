@@ -51,12 +51,41 @@ CREATE TABLE public.refresh_tokens (
 ALTER TABLE public.refresh_tokens OWNER TO postgres;
 
 --
+-- Name: reset_tokens; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.reset_tokens (
+    id uuid NOT NULL,
+    expires_at timestamp(6) with time zone NOT NULL,
+    token character varying(255) NOT NULL,
+    user_id uuid NOT NULL,
+    created_at timestamp(6) with time zone NOT NULL
+);
+
+
+ALTER TABLE public.reset_tokens OWNER TO postgres;
+
+--
+-- Name: study_sessions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.study_sessions (
+    id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    time_min integer NOT NULL,
+    session_end_at timestamp(6) with time zone NOT NULL
+);
+
+
+ALTER TABLE public.study_sessions OWNER TO postgres;
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.users (
     id uuid NOT NULL,
-    created_at timestamp(6) with time zone,
+    created_at timestamp(6) with time zone DEFAULT now(),
     email character varying(255) NOT NULL,
     password character varying(255),
     username character varying(255) NOT NULL,
@@ -85,11 +114,26 @@ COPY public.refresh_tokens (id, created_at, expires_at, token, user_id) FROM std
 
 
 --
+-- Data for Name: reset_tokens; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.reset_tokens (id, expires_at, token, user_id, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: study_sessions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.study_sessions (id, user_id, time_min, session_end_at) FROM stdin;
+\.
+
+
+--
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.users (id, created_at, email, password, username, google_id) FROM stdin;
-9f25470a-3b61-4f50-9983-03d0f08372c5	\N	misio@m.m	$2a$10$CYyAZpstTLEyu7OqFIqbjOhRChzjM81Vi/jjnU5sk54FNVy8Y.Mui	misio	\N
 \.
 
 
@@ -107,6 +151,22 @@ ALTER TABLE ONLY public.plants
 
 ALTER TABLE ONLY public.refresh_tokens
     ADD CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reset_tokens reset_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reset_tokens
+    ADD CONSTRAINT reset_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: study_sessions study_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study_sessions
+    ADD CONSTRAINT study_sessions_pkey PRIMARY KEY (id);
 
 
 --
@@ -131,6 +191,22 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.refresh_tokens
     ADD CONSTRAINT fk1lih5y2npsf8u5o3vhdb9y0os FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: study_sessions fk1pw09mt08ohr4r1cuu33qwyw0; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study_sessions
+    ADD CONSTRAINT fk1pw09mt08ohr4r1cuu33qwyw0 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: reset_tokens fkk9rk4pnm1ya8wcmy78r9gmuxv; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reset_tokens
+    ADD CONSTRAINT fkk9rk4pnm1ya8wcmy78r9gmuxv FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

@@ -3,6 +3,7 @@ package mensa.plant_my_study.security.resetToken;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -57,6 +58,12 @@ public String generateLongResetToken() {
     resetTokenRepository.delete(resetToken);
 
     return true;
+  }
+
+  public void deleteSomeResetTokens(final List<ResetToken> tokens) {
+    for (ResetToken token : tokens) {
+      resetTokenRepository.delete(token);
+    }
   }
 
   public User validateResetTokenAndGetUser(final UUID tokenId, final String token) {
