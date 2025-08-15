@@ -21,6 +21,19 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: achievement; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.achievement (
+    id uuid NOT NULL,
+    name text NOT NULL,
+    prize integer
+);
+
+
+ALTER TABLE public.achievement OWNER TO postgres;
+
+--
 -- Name: plants; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -89,11 +102,20 @@ CREATE TABLE public.users (
     email character varying(255) NOT NULL,
     password character varying(255),
     username character varying(255) NOT NULL,
-    google_id character varying(255)
+    google_id character varying(255),
+    delete_at timestamp(6) with time zone
 );
 
 
 ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Data for Name: achievement; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.achievement (id, name, prize) FROM stdin;
+\.
+
 
 --
 -- Data for Name: plants; Type: TABLE DATA; Schema: public; Owner: postgres
@@ -133,8 +155,17 @@ COPY public.study_sessions (id, user_id, time_min, session_end_at) FROM stdin;
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.users (id, created_at, email, password, username, google_id) FROM stdin;
+COPY public.users (id, created_at, email, password, username, google_id, delete_at) FROM stdin;
+0c0d9319-b559-4922-a58a-e075606ae3af	2025-08-12 18:11:56.85664+00	superjanek333@gmail.com	$2a$10$j.xbNJRSAnEUTI0NKm4uce1dnuyiV07EiWQmS28UTDt.oPqzFBAPS	jasiuuu	\N	\N
 \.
+
+
+--
+-- Name: achievement achievement_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.achievement
+    ADD CONSTRAINT achievement_pkey PRIMARY KEY (id);
 
 
 --

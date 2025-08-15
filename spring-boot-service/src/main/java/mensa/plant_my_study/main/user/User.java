@@ -36,6 +36,9 @@ public class User {
   @Column(name = "created_at")
   private Instant createdAt;
 
+  @Column(name = "delete_at")
+  private Instant DeleteAt;
+
   public User(String username, String email, String password, String googleId) {
     this.username = username;
     this.email = email;

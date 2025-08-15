@@ -3,6 +3,9 @@ package mensa.plant_my_study.config;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import mensa.plant_my_study.main.manageUser.ManageUserManager;
+import mensa.plant_my_study.main.user.User;
+import mensa.plant_my_study.main.user.UserRepository;
 import mensa.plant_my_study.security.refreshToken.RefreshToken;
 import mensa.plant_my_study.security.refreshToken.RefreshTokenManager;
 import mensa.plant_my_study.security.refreshToken.RefreshTokenRepository;
@@ -24,10 +27,12 @@ public class DbOptymalization {
   private final RefreshTokenManager refreshTokenManager;
   private final ResetTokenRepository resetTokenRepository;
   private final ResetTokenManager resetTokenManager;
+  private final UserRepository userRepository;
+  private final ManageUserManager manageUserManager;
 
   @Scheduled(cron="0 0 0 * * *", zone="Europe/Warsaw")
-  public void DeleteExpiredTokens() {
-    System.out.println("Clearing refresh tokens database");
+  public void DailyDeleteFromDB() {
+    System.out.println("Clearing refresh tokens from database");
 
     Instant now = Instant.now();
 
@@ -43,6 +48,8 @@ public class DbOptymalization {
 
     refreshTokenManager.deleteSomeRefreshTokens(refreshTokensToDelete);
 
+    System.out.println("Clearing reset tokens from database");
+
     List<ResetToken> resetTokens = resetTokenRepository.findAll();
     List<ResetToken> resetTokensToDelete = new ArrayList<>();
 
@@ -54,5 +61,19 @@ public class DbOptymalization {
     }
 
     resetTokenManager.deleteSomeResetTokens(resetTokensToDelete);
+
+    System.out.println("Deleting users from database");
+
+    List<User> users = userRepository.findAll();
+    List<User> usersToDelete = new ArrayList<>();
+
+
+    for (User user : users) {
+      if (Duration.between(now, user.getDeleteAt()).isNegative()) {
+        usersToDelete.add(user);
+      }
+    }
+
+    manageUserManager.deleteSomeUsers(usersToDelete);
   }
 }
