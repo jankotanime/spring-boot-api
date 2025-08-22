@@ -2,7 +2,14 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
+
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
 
 group = 'mensa'
 version = '0.0.1-SNAPSHOT'
@@ -12,6 +19,27 @@ java {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
+
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		csv.required = false
+		html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.01
+			}
+		}
+	}
+}
+
 
 repositories {
 	mavenCentral()

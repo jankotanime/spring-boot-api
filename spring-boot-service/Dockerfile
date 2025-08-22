@@ -6,4 +6,4 @@ COPY . .
 # CMD ["./gradlew", "bootRun"]
 
 # With tests
-CMD ["sh", "-c", "./gradlew test && ./gradlew bootRun"]
+CMD ["sh", "-c", "./gradlew test && ./gradlew bootRun && ./gradlew jacocoTestReport && ./gradlew jacocoTestCoverageVerification"]

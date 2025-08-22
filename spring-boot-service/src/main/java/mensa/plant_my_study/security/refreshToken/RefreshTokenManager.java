@@ -57,6 +57,11 @@ public class RefreshTokenManager {
     }
   }
 
+  public void deleteAllUserRefreshTokens(User user) {
+    List<RefreshToken> tokens = refreshTokenRepository.findAllByUser(user);
+    deleteSomeRefreshTokens(tokens);
+  }
+
   public User validateRefreshTokenAndGetUser(final UUID tokenId, final String token) {
     Instant now = Instant.now();
     Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findById(tokenId);

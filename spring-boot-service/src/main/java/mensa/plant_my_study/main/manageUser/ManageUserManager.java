@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import mensa.plant_my_study.main.user.User;
 import mensa.plant_my_study.main.user.UserRepository;
+import mensa.plant_my_study.security.refreshToken.RefreshTokenManager;
 
 @RequiredArgsConstructor
 @Component
 public class ManageUserManager {
   private final UserRepository userRepository;
+  private final RefreshTokenManager refreshTokenManager;
   private static final Duration DELETION_TIME = Duration.ofDays(30);
 
   public void createUser(User user) {
@@ -22,12 +24,19 @@ public class ManageUserManager {
   }
 
   public void startDeletingUser(User user) {
+    refreshTokenManager.deleteAllUserRefreshTokens(user);
     Instant now = Instant.now();
     user.setDeleteAt(now.plus(DELETION_TIME));
   }
 
+  public void deleteUser(User user) {
+    refreshTokenManager.deleteAllUserRefreshTokens(user);
+    userRepository.delete(user);
+  }
+
   public void deleteSomeUsers(List<User> users) {
     for (User user : users) {
+      refreshTokenManager.deleteAllUserRefreshTokens(user);
       userRepository.delete(user);
     }
   }
