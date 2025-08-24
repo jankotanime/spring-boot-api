@@ -27,7 +27,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
       timeout: 5s
-      retries: 10
+      retries: 100
       start_period: 120s
       # ? if the application shuts down during startup because it is marked as unhealthy,
       # ? increase the start_period in the Docker healthcheck. This gives the container
