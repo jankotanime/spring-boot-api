@@ -31,7 +31,7 @@ public class LoginController {
     Map<String, String> response = loginService.tryToLogin(loginData, password);
 
     if (response.containsKey("err")) {
-      if (response.get("err") == "Password not set") {
+      if (response.get("err").equals("Password not set")) {
         return ResponseEntity.status(409).body(response);
       }
       return ResponseEntity.status(401).body(response);
