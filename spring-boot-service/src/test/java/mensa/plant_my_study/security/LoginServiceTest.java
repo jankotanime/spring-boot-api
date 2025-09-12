@@ -33,16 +33,6 @@ public class LoginServiceTest {
     if (userUsernameTest1.isPresent()) {
       manageUserManager.deleteUser(userUsernameTest1.get());
     }
-
-    Optional<User> userEmailTest2 = userRepository.findByEmail("test2@test.test");
-    if (userEmailTest2.isPresent()) {
-      manageUserManager.deleteUser(userEmailTest2.get());
-    }
-
-    Optional<User> userUsernameTest2 = userRepository.findByUsername("test2");
-    if (userUsernameTest2.isPresent()) {
-      manageUserManager.deleteUser(userUsernameTest2.get());
-    }
   }
 
   @Autowired
@@ -101,6 +91,23 @@ public class LoginServiceTest {
   @Test
   public void testWrongPassword() {
     try {
+      String loginData = "test1@test.test";
+      String password = "Test12345";
+      Map<String, String> result = loginService.tryToLogin(loginData, password);
+      Assertions.assertFalse(result.containsKey("access-token") ||
+      result.containsKey("refresh-token") || result.containsKey("refresh-token-id"));
+      Assertions.assertTrue(userRepository.findByEmail(loginData).isPresent());
+    } catch (Exception e) {
+      System.err.println("Err" + e.toString());
+    }
+  }
+
+  @Test
+  public void testNoPassword() {
+    try {
+      User user = userRepository.findByEmail("test1@test.test").get();
+      user.setPassword(null);
+      userRepository.save(user);
       String loginData = "test1@test.test";
       String password = "Test12345";
       Map<String, String> result = loginService.tryToLogin(loginData, password);
