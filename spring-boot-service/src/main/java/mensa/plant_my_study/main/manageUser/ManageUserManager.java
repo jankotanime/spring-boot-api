@@ -27,6 +27,7 @@ public class ManageUserManager {
     refreshTokenManager.deleteAllUserRefreshTokens(user);
     Instant now = Instant.now();
     user.setDeleteAt(now.plus(DELETION_TIME));
+    userRepository.save(user);
   }
 
   public void deleteUser(User user) {

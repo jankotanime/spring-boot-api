@@ -25,7 +25,7 @@ public class ManageUserService {
       .matches();
   }
 
-  public Map<String, String> StartDeletingUser(String username) {
+  public Map<String, String> startDeletingUser(String username) {
     Map<String, String> response = new HashMap<>();
     Optional<User> userOptional = userRepository.findByUsername(username);
 

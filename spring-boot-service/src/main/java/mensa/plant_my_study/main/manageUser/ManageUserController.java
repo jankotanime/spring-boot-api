@@ -25,7 +25,7 @@ public class ManageUserController {
   public ResponseEntity<Map<String, String>> StartDeletingUser() {
     String username = jwtConfig.getUsernameFromJWT();
 
-    Map<String, String> response = manageUserService.StartDeletingUser(username);
+    Map<String, String> response = manageUserService.startDeletingUser(username);
 
     if (response.containsKey("err")) {
       return ResponseEntity.status(404).body(response);
